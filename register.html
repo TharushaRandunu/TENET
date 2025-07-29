@@ -3,6 +3,7 @@
 <head>
     <title>Foreigner Registration - Hotel System</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <form action="register.php" method="POST">
@@ -25,5 +26,35 @@
 
         <input type="submit" value="Register">
     </form>
+
+    <script>
+        // Show alerts based on URL params from PHP redirect
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+        const password = urlParams.get('password');
+
+        if (status === 'success') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Registration Successful!',
+                html: 'Your generated password is: <strong>' + password + '</strong>',
+                confirmButtonText: 'Go to Login'
+            }).then(() => {
+                window.location.href = 'login.html';
+            });
+        } else if (status === 'error') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Registration Failed',
+                text: 'Please try again.',
+            });
+        } else if (status === 'missing') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: 'Please fill all required fields.',
+            });
+        }
+    </script>
 </body>
 </html>

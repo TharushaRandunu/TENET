@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Guest Login</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+
     <form action="login.php" method="POST">
         <h2>Guest Login</h2>
 
@@ -16,5 +19,25 @@
 
         <input type="submit" value="Login">
     </form>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        if (status === 'success') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Successful',
+                text: 'Welcome!',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        } else if (status === 'wrongpass') {
+            Swal.fire('❌ Incorrect Password', 'Please try again.', 'error');
+        } else if (status === 'nouser') {
+            Swal.fire('❌ User Not Found', 'Check your passport number.', 'error');
+        }
+    </script>
+
 </body>
 </html>

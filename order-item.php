@@ -22,12 +22,45 @@ $sql = "INSERT INTO room_service_orders (passport_no, room_no, category, item_na
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ssssi", $passport_no, $room_no, $category, $item_name, $quantity);
 
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Status</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<?php
 if ($stmt->execute()) {
-    echo "<h3>Order Sent to Room $room_no!</h3>";
-    echo "<a href='menu.php'>Back to Menu</a>";
+    echo "
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: '✅ Order Sent!',
+            text: 'Room $room_no has received the order.',
+            confirmButtonText: 'Back to Menu'
+        }).then(() => {
+            window.location.href = 'menu.php';
+        });
+    </script>";
 } else {
-    echo "Failed to send order: " . $stmt->error;
+    $error = addslashes($stmt->error);
+    echo "
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: '❌ Order Failed',
+            text: '$error',
+            confirmButtonText: 'Try Again'
+        }).then(() => {
+            window.location.href = 'menu.php';
+        });
+    </script>";
 }
 
 $stmt->close();
 $conn->close();
+?>
+</body>
+</html>

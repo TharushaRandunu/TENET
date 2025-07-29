@@ -24,18 +24,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
         if (password_verify($password_input, $user['password'])) {
-            // Set session variables
             $_SESSION['passport_no'] = $user['passport_no'];
             $_SESSION['full_name'] = $user['full_name'];
 
-            // Redirect to home page
+            
             header("Location: homePage.php");
             exit();
         } else {
-            echo "Incorrect password.";
+            header("Location: login.html?status=wrongpass");
+            exit();
         }
     } else {
-        echo "User not found. Please check your passport number.";
+        header("Location: login.html?status=nouser");
+        exit();
     }
 
     $stmt->close();

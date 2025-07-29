@@ -4,7 +4,7 @@ function generatePassword($length = 8) {
     return substr(str_shuffle($chars), 0, $length);
 }
 
-// Database connection
+// DB connection
 $host = "localhost";
 $username = "root";
 $password = "";
@@ -23,7 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone       = $_POST['phone'] ?? null;
 
     if (!$passport_no || !$full_name || !$email || !$country) {
-        die("Please fill all required fields.");
+        // Redirect back with missing fields status
+        header("Location: register.html?status=missing");
+        exit();
     }
 
     $generatedPassword = generatePassword();
@@ -36,14 +38,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssssss", $passport_no, $full_name, $email, $country, $phone, $hashedPassword);
 
     if ($stmt->execute()) {
-        echo "Registration successful!<br>";
-        echo "Your generated password is: <strong>$generatedPassword</strong><br>";
-        echo "<a href='login.html'>Click here to Login</a>";
+        // Redirect back with success status and generated password
+        // IMPORTANT: URL encode password to avoid issues
+        header("Location: register.html?status=success&password=" . urlencode($generatedPassword));
+        exit();
     } else {
-        echo "Error: " . $stmt->error;
+        // Redirect back with error status
+        header("Location: register.html?status=error");
+        exit();
     }
 
     $stmt->close();
-    $conn->close();
 }
+
+$conn->close();
 ?>

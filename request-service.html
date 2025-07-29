@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Request a Service</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+
     <form action="request-service.php" method="POST" class="service-form">
         <h2>Request a Hotel Service</h2>
 
@@ -29,5 +32,27 @@
 
         <input type="submit" value="Submit Request">
     </form>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        if (status === 'success') {
+            Swal.fire({
+                icon: 'success',
+                title: '✅ Request Submitted!',
+                text: 'Thank you. We’ll respond shortly.',
+                confirmButtonText: 'OK'
+            });
+        } else if (status === 'error') {
+            Swal.fire({
+                icon: 'error',
+                title: '❌ Submission Failed',
+                text: 'Something went wrong. Please try again.',
+                confirmButtonText: 'OK'
+            });
+        }
+    </script>
+
 </body>
 </html>
